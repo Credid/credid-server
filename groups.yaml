@@ -1,9 +1,0 @@
----
-file: groups.yaml
-groups:
-  root:
-    name: root
-    permissions:
-      ? value: '*'
-      : 3
-    default: 0
