@@ -1,6 +1,16 @@
 require "./client_handler/*"
 
 class Auth::Server::ClientHandler
+  alias CommandHandler = Proc(ClientHandler, String, Nil)
+  macro add_handler(cmd, handler)
+    ROOT_HANDLERS[{{cmd}}] = -> {{handler}}(ClientHandler, String)
+  end
+  ROOT_HANDLERS = Hash(String, CommandHandler).new
+
+  add_handler "AUTH", ClientHandler::AuthCommand.auth
+  add_handler "USER LIST GROUPS", ClientHandler::UserCommand.list_group
+  add_handler "USER HAS ACCESS TO", ClientHandler::UserCommand.has_access_to
+
   getter context : Handler
   getter client : OpenSSL::SSL::Socket::Server | TCPSocket
   property user : Acl::User?
@@ -11,15 +21,22 @@ class Auth::Server::ClientHandler
     @authenticated = false
   end
 
+  def connected_user : Acl::User
+    raise "Not connected" if @user.nil?
+    @user.as(Acl::User)
+  end
+
+  private def get_cmd
+    cmd = @client.gets
+    @client.close if cmd.nil?
+    cmd
+  end
+
   def handle
     loop do
-      cmd = @client.gets
-      if cmd.nil?
-        @client.close
-        break
-      else
-        handle_command cmd
-      end
+      cmd = get_cmd
+      break if cmd.nil?
+      handle_command cmd
     end
   end
 
@@ -32,32 +49,23 @@ class Auth::Server::ClientHandler
   end
 
   private def handle_command(cmd)
-    split1 = cmd.split ' ', 2
-    p1 = split1[0]
-    cmd2 = split1[1]? || ""
+    command_split = cmd.split ':', 2
+    command_words = command_split[0].strip
+    params = (command_split[1]? || "").strip
 
     # Verifies the permissions unless it is AUTH
-    if p1 != "AUTH"
+    if command_words != "AUTH"
       return send_failure "not connected" if user.nil?
       return send_failure "not permitted" unless context.groups.permitted? user.as(Acl::User), cmd, Acl::Perm::Write
     end
 
     # Execute the operation if permitted
+    handler_function = ROOT_HANDLERS[command_words]?
+    return send_failure "invalid command" if handler_function.nil?
     begin
-      handler_module = ROOT_HANDLERS[p1]
-      begin
-        handler_module.handle(self, cmd2)
-      rescue err
-        send_failure "invalid command parameters #{err}"
-      end
+      handler_function.as(CommandHandler).call(self, params)
     rescue err
-      send_failure "failure unknown command #{err}"
+      send_failure "failure failed to execute command #{command_words} (#{err})"
     end
   end
-
-  ROOT_HANDLERS = {
-    "AUTH"  => ClientHandler::Auth,
-    "GROUP" => ClientHandler::Group,
-    "USER"  => ClientHandler::User,
-  }
 end

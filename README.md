@@ -37,68 +37,75 @@ Errors:
 
 #### Authenticate on the server
 
-    AUTH user password
+    AUTH : user password
     # => success / failure
 
+##### Check a resource
+
+    # Check if the user has access to a resource for the connected user
+    USER HAS_ACCESS TO : perm path
+    # => success / failure
+    USER HAS ACCESS TO : write /wiki/some/page
 
 ##### Manage groups
 
     # Add a new entry to a group (and create the group if it does not exists).
-    GROUP ADD group perm path
+    GROUP ADD : group perm path
     # => success / failure
-    GROUP ADD admin write *
+    GROUP ADD : admin write *
 
     # Remove a group permission.
-    GROUP REMOVE group path
+    GROUP REMOVE : group path
     # => success / failure
-    GROUP REMOVE group guest *
+    GROUP REMOVE : group guest *
 
     # Remove a group.
-    GROUP REMOVE group
+    GROUP REMOVE : group
     # => success / failure
-    GROUP REMOVE "old_system"
+    GROUP REMOVE : old system
 
     # List the permissions of a group.
     GROUP LIST group
-    # => {"perm" => "path", ...}
-    GROUP LIST admin
+    # => success\n{"perm" => "path", ...} / failure
+    GROUP LIST:  admin
 
     # List the groups.
     GROUP LIST
-    # => ["group", ...]
+    # => success\n["group", ...] / failure
     GROUP LIST
 
     # Get the permissions of a group a a fiven path
-    GROUP GET_PERM group path
-    # => "perm" / failure
-    GROUP GET_PERM "guest"
+    GROUP GET PERM : group path
+    # => success\n"perm" / failure
+    GROUP GET PERM : "guest"
 
 ##### Manage the users
 
     # Add an user
-    USER ADD user password
+    USER ADD : user password
     # => success / failure
-    USER ADD root toor
+    USER ADD : root toor
 
     # Add a group to an user. Create inexisting groups.
-    USER ADD_GROUP user group
+    USER ADD GROUP : user group
     # => success / failure
-    USER ADD_GROUP root admin
+    USER ADD GROUP : root admin
 
     # List the gorups of an user
-    USER LIST_GROUP user
-    # => ["group", ...] / failure
-    USER LIST_GROUP root
+    USER LIST GROUP : user
+    # => success\n["group", ...] / failure
+    USER LIST GROUP : \a
 
     # Remove a group from an user. If their is no such group or if the user does not belong to it, it does nothing.
-    USER REMOVE_GROUP user group
+    USER REMOVE GROUP : user group
     # => success / failure
-    USER REMOVE_GROUP
+    USER REMOVE GROUP me guest
 
     # Change the password of an user
-    USER CHANGEPASSWORD user newpassword
+    USER CHANGEPASSWORD : user newpassword
     # => success / failure
-    USER CHANGEPASSWORD root bettertoorpassword
+    USER CHANGEPASSWORD : root bettertoorpassword
+
 
 ## Development
 
