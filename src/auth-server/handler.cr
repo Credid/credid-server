@@ -22,7 +22,7 @@ class Auth::Server::Handler
 
   def start
     socket = TCPServer.new @options.ip, @options.port
-    puts "Auth-Server started on #{@options.ip}:#{@options.port}"
+    puts "Auth-Server started on #{@options.ip}:#{@options.port} (#{@options.ssl ? "secure" : "unsecure"})"
     if @options.ssl
       context = OpenSSL::SSL::Context::Server.new
       context.private_key = @options.ssl_key_file
@@ -34,7 +34,12 @@ class Auth::Server::Handler
   end
 
   private def handle_client(socket, client, ssl_context = nil)
-    client = OpenSSL::SSL::Socket::Server.new client, ssl_context if ssl_context
-    ClientHandler.new(self, client).handle
+    puts "New client connected"
+    if ssl_context
+      ssl_client = OpenSSL::SSL::Socket::Server.new client, ssl_context
+      ClientHandler.new(self, ssl_client).handle
+    else
+      ClientHandler.new(self, client).handle
+    end
   end
 end

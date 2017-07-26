@@ -8,7 +8,7 @@ Authentication and permission management server.
 
 ## Usage
 
-TODO: Write usage instructions here
+    ./auth-server --ip 127.0.0.1 --port 8999
 
 ### Protocol
 
