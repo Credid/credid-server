@@ -8,6 +8,8 @@ class Auth::Server::Handler
   getter options : Auth::Server::Options
   getter users : Acl::Users
   getter groups : Acl::Groups
+  # Used to close the server during the execution
+  @socket : TCPSocket?
 
   def initialize(@options)
     @users = Acl::Users.new(@options.users_file).load!
@@ -22,15 +24,21 @@ class Auth::Server::Handler
 
   def start
     socket = TCPServer.new @options.ip, @options.port
+    @socket = socket
     puts "Auth-Server started on #{@options.ip}:#{@options.port} (#{@options.ssl ? "secure" : "unsecure"})"
     if @options.ssl
       context = OpenSSL::SSL::Context::Server.new
       context.private_key = @options.ssl_key_file
       context.certificate_chain = @options.ssl_cert_file
-      loop { spawn handle_client socket, socket.accept, context }
+      loop { spawn handle_client socket, socket.accept, context; break if socket.closed? }
     else
-      loop { spawn handle_client socket, socket.accept }
+      loop { spawn handle_client socket, socket.accept; break if socket.closed? }
     end
+  end
+
+  # TODO: check ssl socket too
+  def stop
+    @socket.as(TCPServer).close unless @socket.nil?
   end
 
   private def handle_client(socket, client, ssl_context = nil)

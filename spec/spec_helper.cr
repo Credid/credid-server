@@ -1,2 +1,2 @@
 require "spec"
-require "../src/auth-server"
+require "../src/_init"

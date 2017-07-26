@@ -1,7 +1,4 @@
-require "./lockable"
-
-require "./acl/**"
-require "./auth-server/**"
+require "./_init"
 
 options = Auth::Server::Options.new
 handler = Auth::Server::Handler.new options
