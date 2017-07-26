@@ -1,0 +1,8 @@
+---
+file: users.yaml
+list:
+  root:
+    name: root
+    password: $2a$11$3nKq03Xoz0aS09f3uz7.YOQGJWelbEXx/8RCKWjBJS23XnLIrf5I2
+    groups:
+    - root

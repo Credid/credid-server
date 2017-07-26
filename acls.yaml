@@ -1,0 +1,9 @@
+---
+file: acls.yaml
+groups:
+  toor:
+    name: toor
+    permissions:
+      ? value: '*'
+      : 3
+    default: 0
