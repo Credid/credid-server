@@ -34,7 +34,7 @@ In the paths:
 Errors:
 
 * The only error case happens if the connected user have not the rights to do something
-* If an user add another user, it will replace the old entry if it already exists (keep the connection alive if replace itself)
+* If a user add another user, it will replace the old entry if it already exists (keep the connection alive if replace itself)
 
 #### Authenticate on the server
 
@@ -82,27 +82,27 @@ Errors:
 
 ##### Manage the users
 
-    # Add an user
+    # Add a user
     USER ADD : user password
     # => success / failure
     USER ADD : root toor
 
-    # Add a group to an user. Create inexisting groups.
+    # Add a group to a user. Create inexisting groups.
     USER ADD GROUP : user group
     # => success / failure
     USER ADD GROUP : root admin
 
-    # List the gorups of an user
+    # List the gorups of a user
     USER LIST GROUP : user
     # => success\n["group", ...] / failure
     USER LIST GROUP : \a
 
-    # Remove a group from an user. If their is no such group or if the user does not belong to it, it does nothing.
+    # Remove a group from a user. If their is no such group or if the user does not belong to it, it does nothing.
     USER REMOVE GROUP : user group
     # => success / failure
     USER REMOVE GROUP me guest
 
-    # Change the password of an user
+    # Change the password of a user
     USER CHANGEPASSWORD : user newpassword
     # => success / failure
     USER CHANGEPASSWORD : root bettertoorpassword
