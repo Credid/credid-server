@@ -3,7 +3,7 @@ class Auth::Server::ClientHandler
     extend self
 
     def handle(context, cmd2)
-      p2 = cmd2.split(' ', 2)
+      p2 = cmd2.split ' ', 2
       case p2[0]
       when "LIST_GROUP"
         group = p2[1]?

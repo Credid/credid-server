@@ -9,7 +9,7 @@ class Acl::Path
   def self.value_to_regex(value : String)
     value_regex = value.gsub('*', ".*")
     value_regex = value_regex.gsub('$', "[a-zA-Z0-9_-]+")
-    # TODO: add a context (user)
+    # TODO: add a context (user)
     Regex.new("^#{value_regex}$")
   end
 

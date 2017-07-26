@@ -1,7 +1,5 @@
 require "socket"
 require "openssl"
-require "./acl/users"
-require "./acl/groups"
 
 require "./options"
 require "./client_handler"
@@ -26,17 +24,17 @@ class Auth::Server::Handler
     socket = TCPServer.new @options.ip, @options.port
     puts "Auth-Server started on #{@options.ip}:#{@options.port}"
     if @options.ssl
-       context = OpenSSL::SSL::Context::Server.new
-       context.private_key = @options.ssl_key_file
-       context.certificate_chain = @options.ssl_cert_file
-       loop { spawn handle_client(socket, socket.accept, context) }
+      context = OpenSSL::SSL::Context::Server.new
+      context.private_key = @options.ssl_key_file
+      context.certificate_chain = @options.ssl_cert_file
+      loop { spawn handle_client socket, socket.accept, context }
     else
-       loop { spawn handle_client(socket, socket.accept) }
+      loop { spawn handle_client socket, socket.accept }
     end
   end
 
-  private def handle_client(socket, client, context = nil)
-    client = OpenSSL::SSL::Socket::Server.new client, context if context
+  private def handle_client(socket, client, ssl_context = nil)
+    client = OpenSSL::SSL::Socket::Server.new client, ssl_context if ssl_context
     ClientHandler.new(self, client).handle
   end
 end

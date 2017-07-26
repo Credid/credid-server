@@ -1,9 +1,6 @@
 require "./lockable"
-require "./options"
-require "./handler"
 
-#require "./acl/**"
-#require "./users/**"
+require "./acl/**"
 require "./auth-server/**"
 
 options = Auth::Server::Options.new
