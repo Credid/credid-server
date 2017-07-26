@@ -4,7 +4,7 @@ require "./user"
 # An instance of `Users` must be linked with a file which can be read of updated
 #
 # TODO: mutex on add/remove/update
-class Users < Lockable
+class Acl::Users < Lockable
   class AlreadyExist < Exception
   end
 

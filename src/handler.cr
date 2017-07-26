@@ -1,29 +1,30 @@
 require "socket"
 require "openssl"
-require "../users/users"
-require "../acl/groups"
+require "./acl/users"
+require "./acl/groups"
 
 require "./options"
 require "./client_handler"
 
 class Auth::Server::Handler
   getter options : Auth::Server::Options
-  getter users : Users
-  getter acls : Acl::Groups
+  getter users : Acl::Users
+  getter groups : Acl::Groups
 
   def initialize(@options)
-    @users = Users.new(@options.users_file).load!
-    @acls = Acl::Groups.new(@options.acls_file).load!
+    @users = Acl::Users.new(@options.users_file).load!
+    @groups = Acl::Groups.new(@options.groups_file).load!
     @users.register! name: "root", password: "toor", groups: %w(root) if @users.list.empty?
-    if @acls.groups.empty?
-      @acls.add "toor"
-      @acls["toor"]["*"] = Acl::Perm::Write
-      @acls.save!
+    if @groups.groups.empty?
+      @groups.add "toor"
+      @groups["toor"]["*"] = Acl::Perm::Write
+      @groups.save!
     end
   end
 
   def start
     socket = TCPServer.new @options.ip, @options.port
+    puts "Auth-Server started on #{@options.ip}:#{@options.port}"
     if @options.ssl
        context = OpenSSL::SSL::Context::Server.new
        context.private_key = @options.ssl_key_file

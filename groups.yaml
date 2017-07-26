@@ -1,8 +1,8 @@
 ---
-file: acls.yaml
+file: groups.yaml
 groups:
-  toor:
-    name: toor
+  root:
+    name: root
     permissions:
       ? value: '*'
       : 3

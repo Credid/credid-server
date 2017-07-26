@@ -8,7 +8,7 @@ module Auth::Server
     getter ssl_key_file : String
     getter ssl_cert_file : String
     getter users_file : String
-    getter acls_file : String
+    getter groups_file : String
 
     def initialize
       @port = 8999_u16
@@ -17,7 +17,7 @@ module Auth::Server
       @ssl_key_file = "private.key"
       @ssl_cert_file = "cert.pem"
       @users_file = "users.yaml"
-      @acls_file = "acls.yaml"
+      @groups_file = "groups.yaml"
       OptionParser.parse! do |parser|
         parser.banner = "Usage: auth-server [arguments]"
         parser.on("-p=PORT", "--port=PORT", "Specify the port to bind") { |port| @port = UInt16.new port }
@@ -26,7 +26,7 @@ module Auth::Server
         parser.on("--ssl-key=FILE", "Specify the key file") { |key| @ssl_key_file = key }
         parser.on("--ssl-cert=FILE", "Specify the cert file") { |cert| @ssl_cert_file = cert }
         parser.on("-u=UFILE", "--users=FILE", "Specify the users database file") { |f| @users_file = f }
-        parser.on("-a=AFILE", "--acls=FILE", "Specify the acls database file") { |f| @acls_file = f }
+        parser.on("-a=AFILE", "--groups=FILE", "Specify the groups database file") { |f| @groups_file = f }
         parser.on("-h", "--help", "Show this help") { puts parser; exit }
       end
     end
