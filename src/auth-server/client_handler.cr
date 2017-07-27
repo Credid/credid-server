@@ -27,8 +27,8 @@ class Auth::Server::ClientHandler
   end
 
   private def get_cmd
-    cmd = @client.gets
-    @client.close if cmd.nil?
+    cmd = client.gets
+    client.close if cmd.nil?
     cmd
   end
 
@@ -40,12 +40,17 @@ class Auth::Server::ClientHandler
     end
   end
 
+  def send(msg)
+    client.puts msg
+    client.flush
+  end
+
   def send_success(msg : String? = nil)
-    @client.puts msg ? "success #{msg}" : "success"
+    send msg ? "success #{msg}" : "success"
   end
 
   def send_failure(msg : String? = nil)
-    @client.puts msg ? "failure #{msg}" : "failure"
+    send msg ? "failure #{msg}" : "failure"
   end
 
   private def handle_command(cmd)

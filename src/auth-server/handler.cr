@@ -23,16 +23,23 @@ class Auth::Server::Handler
   end
 
   def start
-    socket = TCPServer.new @options.ip, @options.port
-    @socket = socket
+    server = TCPServer.new @options.ip, @options.port
+    @socket = server
     puts "Auth-Server started on #{@options.ip}:#{@options.port} (#{@options.ssl ? "secure" : "unsecure"})"
+
+    context = nil
     if @options.ssl
       context = OpenSSL::SSL::Context::Server.new
       context.private_key = @options.ssl_key_file
       context.certificate_chain = @options.ssl_cert_file
-      loop { spawn handle_client socket, socket.accept, context; break if socket.closed? }
-    else
-      loop { spawn handle_client socket, socket.accept; break if socket.closed? }
+    end
+
+    loop do
+      if client = server.accept?
+        spawn handle_client(server, client, context)
+      else
+        break
+      end
     end
   end
 
@@ -42,7 +49,7 @@ class Auth::Server::Handler
   end
 
   private def handle_client(socket, client, ssl_context = nil)
-    puts "New client connected"
+    #puts "New client connected"
     if ssl_context
       ssl_client = OpenSSL::SSL::Socket::Server.new client, ssl_context
       ClientHandler.new(self, ssl_client).handle
