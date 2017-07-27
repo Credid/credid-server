@@ -25,5 +25,18 @@ class Auth::Server::ClientHandler
       path = splitted_params[1]?
       path ? remove_path(context, group, path) : remove_group(context, group)
     end
+
+    def list(context, params)
+      context.send_success context.groups.groups.keys.inspect
+    end
+
+    def list_perms(context, params)
+      perms = context.groups[params]?
+      if perms
+        context.send_success perms.permissions.map{|k,v| {k.to_s, v.to_s} }.to_h.inspect
+      else
+        context.send_success "{}"
+      end
+    end
   end
 end

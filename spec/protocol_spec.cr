@@ -29,6 +29,12 @@ describe Auth::Server do
     cli.gets.should eq "success"
     cli.puts "USER HAS ACCESS TO : write /any/path/random"
     cli.gets.should eq "success"
+    # Test group list
+    cli.puts "GROUP LIST"
+    cli.gets.should eq "success [\"root\"]"
+    # Test group list perm
+    cli.puts "GROUP LIST PERMS : root"
+    cli.gets.should eq "success {\"*\" => \"Write\"}"
 
     cli.close
     handler.stop

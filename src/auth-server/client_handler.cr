@@ -12,6 +12,8 @@ class Auth::Server::ClientHandler
   add_handler "USER HAS ACCESS TO", ClientHandler::UserCommand.has_access_to
   add_handler "GROUP ADD", ClientHandler::GroupCommand.add
   add_handler "GROUP REMOVE", ClientHandler::GroupCommand.remove
+  add_handler "GROUP LIST", ClientHandler::GroupCommand.list
+  add_handler "GROUP LIST PERMS", ClientHandler::GroupCommand.list_perms
 
   getter context : Handler
   getter client : OpenSSL::SSL::Socket::Server | TCPSocket

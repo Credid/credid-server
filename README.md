@@ -65,15 +65,15 @@ Errors:
     # => success / failure
     GROUP REMOVE : somegroup
 
-    # List the permissions of a group.
-    GROUP LIST group
-    # => success\n{"perm" => "path", ...} / failure
-    GROUP LIST:  admin
-
     # List the groups.
     GROUP LIST
     # => success\n["group", ...] / failure
     GROUP LIST
+
+    # List the permissions of a group.
+    GROUP LIST PERMS : group
+    # => success\n{"path" => "perm", ...} / failure
+    GROUP LIST PERMS : admin
 
     # Get the permissions of a group a a fiven path
     GROUP GET PERM : group path
@@ -93,9 +93,9 @@ Errors:
     USER ADD GROUP : root admin
 
     # List the gorups of a user.
-    USER LIST GROUP : user
+    USER LIST GROUPS OF : user
     # => success\n["group", ...] / failure
-    USER LIST GROUP : \a
+    USER LIST GROUPS : \a
 
     # Remove a group from a user. Doe nothing if the group doesn't exists/...
     USER REMOVE GROUP : user group
