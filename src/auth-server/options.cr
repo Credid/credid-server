@@ -2,13 +2,13 @@ require "option_parser"
 
 module Auth::Server
   class Options
-    getter port : UInt16
-    getter ip : String
-    getter ssl : Bool
-    getter ssl_key_file : String
-    getter ssl_cert_file : String
-    getter users_file : String
-    getter groups_file : String
+    property port : UInt16
+    property ip : String
+    property ssl : Bool
+    property ssl_key_file : String
+    property ssl_cert_file : String
+    property users_file : String
+    property groups_file : String
 
     def initialize
       @port = 8999_u16

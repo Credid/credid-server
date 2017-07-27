@@ -1,6 +1,8 @@
 describe Auth::Server do
   it "test auth" do
     options = Auth::Server::Options.new
+    options.users_file = "/tmp/users.yaml"
+    options.groups_file = "/tmp/groups.yaml"
     handler = Auth::Server::Handler.new options
     server_fiber = spawn { handler.start }
 
