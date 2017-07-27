@@ -18,18 +18,18 @@ The default group should have the access "USER changepassword \$ \*"
 
 Definitions:
 
-* Group: \[a-zA-Z0-9][a-zA-Z0-9_-]+
-* User: \[a-zA-Z0-9][a-zA-Z0-9_-]+
-* Perm: \[a-zA-Z0-9][a-zA-Z0-9_-]+
-* Path: .+
-* Password: .+
+* Group: `\[a-zA-Z0-9][a-zA-Z0-9_-]+`
+* User: `\[a-zA-Z0-9][a-zA-Z0-9_-]+`
+* Perm: `\[a-zA-Z0-9][a-zA-Z0-9_-]+`
+* Path: `.+`
+* Password: `.+`
 
 In the paths:
 
-* \*: character is replaced with .+ (unless escaped with \\)
-* \$: character is replaced with \[a-zA-Z0-9][a-zA-Z0-9_-]+ (unless escaped with \\)
-* \a: is replaced with the username of the current authenticated user (the \a is never registrated, it is replaced by the real name)
-* \u: is replaced with the user that executes the request
+* `*`: character is replaced with `.+` (unless escaped with `\`)
+* `$`: character is replaced with `\[a-zA-Z0-9][a-zA-Z0-9_-]+` (unless escaped with `\`)
+* `\a`: is replaced with the username of the current authenticated user (the `\a` is never registrated, it is replaced by the real name)
+* `\u`: is replaced with the user that executes the request
 
 Errors:
 
@@ -81,6 +81,11 @@ Errors:
     GROUP GET PERM : "guest"
 
 ##### Manage the users
+
+    # List the users
+    USER LIST
+    # => success ["group", ...] / failure
+    USER LIST
 
     # Add a user.
     USER ADD : user password
