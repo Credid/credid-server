@@ -50,7 +50,7 @@ Errors:
 
 ##### Manage groups
 
-    # Add a new entry to a group (and create the group if it does not exists).
+    # Add a new entry to a group (create it if needed).
     GROUP ADD : group perm path
     # => success / failure
     GROUP ADD : admin write *
@@ -82,7 +82,7 @@ Errors:
 
 ##### Manage the users
 
-    # Add a user
+    # Add a user.
     USER ADD : user password
     # => success / failure
     USER ADD : root toor
@@ -92,17 +92,17 @@ Errors:
     # => success / failure
     USER ADD GROUP : root admin
 
-    # List the gorups of a user
+    # List the gorups of a user.
     USER LIST GROUP : user
     # => success\n["group", ...] / failure
     USER LIST GROUP : \a
 
-    # Remove a group from a user. If their is no such group or if the user does not belong to it, it does nothing.
+    # Remove a group from a user. Doe nothing if the group doesn't exists/...
     USER REMOVE GROUP : user group
     # => success / failure
     USER REMOVE GROUP me guest
 
-    # Change the password of a user
+    # Change the password of a user.
     USER CHANGEPASSWORD : user newpassword
     # => success / failure
     USER CHANGEPASSWORD : root bettertoorpassword
