@@ -4,6 +4,7 @@ describe Auth::Server do
     # TODO: user tmpfile
     options.users_file = "/tmp/users.yaml"
     options.groups_file = "/tmp/groups.yaml"
+    options.verbosity = false
     handler = Auth::Server::Handler.new options
     server_fiber = spawn { handler.start }
 
