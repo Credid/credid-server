@@ -10,11 +10,15 @@ class Auth::Server::ClientHandler
   add_handler "AUTH", ClientHandler::AuthCommand.auth
   add_handler "USER LIST GROUPS", ClientHandler::UserCommand.list_group
   add_handler "USER HAS ACCESS TO", ClientHandler::UserCommand.has_access_to
+  add_handler "GROUP ADD", ClientHandler::GroupCommand.add
+  add_handler "GROUP REMOVE", ClientHandler::GroupCommand.remove
 
   getter context : Handler
   getter client : OpenSSL::SSL::Socket::Server | TCPSocket
   property user : Acl::User?
   property authenticated : Bool
+  delegate users, to: context
+  delegate groups, to: context
 
   def initialize(@context, @client)
     @user = nil

@@ -12,8 +12,8 @@ class Auth::Server::ClientHandler
     end
 
     def has_access_to(context, params)
-      perm, path = params.split(' ', 2)
-      acl = context.context.groups.permitted? context.connected_user, path, Acl::PERM_STR[perm]
+      perm, path = params.split ' ', 2
+      acl = context.groups.permitted? context.connected_user, path, Acl::PERM_STR[perm]
       acl ? context.send_success : context.send_failure
     end
   end

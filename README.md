@@ -58,12 +58,12 @@ Errors:
     # Remove a group permission.
     GROUP REMOVE : group path
     # => success / failure
-    GROUP REMOVE : group guest *
+    GROUP REMOVE : guest *
 
     # Remove a group.
     GROUP REMOVE : group
     # => success / failure
-    GROUP REMOVE : old system
+    GROUP REMOVE : somegroup
 
     # List the permissions of a group.
     GROUP LIST group

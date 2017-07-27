@@ -6,11 +6,28 @@ describe Auth::Server do
 
     sleep 0.2
     cli = TCPSocket.new "127.0.0.1", 8999
+    # Auth
     cli.puts "AUTH : root toor"
     cli.gets.should eq "success"
+    # Test basic groups
+    cli.puts "USER LIST GROUPS : \\a"
+    cli.gets.should eq "success [\"root\"]"
+    # Test basic perms
     cli.puts "USER HAS ACCESS TO : write /any/path/random"
     cli.gets.should eq "success"
     cli.puts "USER HAS ACCESS TO : read /any/path/random"
+    cli.gets.should eq "success"
+    # Test add a new perm
+    cli.puts "GROUP ADD : root read /any/path/random"
+    cli.gets.should eq "success"
+    cli.puts "USER HAS ACCESS TO : write /any/path/random"
+    cli.gets.should eq "failure"
+    cli.puts "USER HAS ACCESS TO : read /any/path/random"
+    cli.gets.should eq "success"
+    # Test remove this perm
+    cli.puts "GROUP REMOVE : root /any/path/random"
+    cli.gets.should eq "success"
+    cli.puts "USER HAS ACCESS TO : write /any/path/random"
     cli.gets.should eq "success"
 
     cli.close
