@@ -12,8 +12,9 @@ Authentication and permission management server.
 
 ### Protocol
 
-The first user create is "root" with the password "toor". It has the group "root" which has "write \*" access.
-The default group should have the access "USER changepassword \$ \*"
+The first user create is `root` with the password `toor`.
+It has the group `root` which has `write *` access.
+The default group should have the access `USER CHANGE PASSWORD : \u *`
 
 
 Definitions:
