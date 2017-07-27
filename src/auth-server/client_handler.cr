@@ -44,8 +44,8 @@ class Auth::Server::ClientHandler
     end
   end
 
-  def send(msg)
-    client.puts msg
+  def send(msg : String)
+    client.print "#{msg}\n"
     client.flush
   end
 
@@ -74,7 +74,7 @@ class Auth::Server::ClientHandler
     begin
       handler_function.as(CommandHandler).call(self, params)
     rescue err
-      send_failure "failure failed to execute command #{command_words} (#{err})"
+      send_failure "failed to execute command #{command_words} (#{err})"
     end
   end
 end

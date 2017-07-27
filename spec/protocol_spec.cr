@@ -8,7 +8,7 @@ describe Auth::Server do
     cli = TCPSocket.new "127.0.0.1", 8999
     # Auth
     cli.puts "AUTH : root toor"
-    cli.gets.should eq "success"
+    cli.gets(chomp: false).should eq "success\n"
     # Test basic groups
     cli.puts "USER LIST GROUPS : \\a"
     cli.gets.should eq "success [\"root\"]"
