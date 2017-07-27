@@ -22,6 +22,10 @@ class Auth::Server::Handler
     if @groups.groups.empty?
       @groups.add "root"
       @groups["root"]["*"] = Acl::Perm::Write
+      @groups.add "user"
+      # @groups["user"]["USER CHANGE PASSWORD : \\u *"] = Acl::Perm::Write
+      # @groups["user"]["USER REMOVE : \\u"] = Acl::Perm::Write
+      # @groups["user"]["USER LIST GROUPS : \\u"] = Acl::Perm::Write
       @groups.save!
     end
   end

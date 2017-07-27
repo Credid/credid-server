@@ -71,7 +71,7 @@ describe Auth::Server do
     cli.gets.should eq "success"
     # Test group list
     cli.puts "GROUP LIST"
-    cli.gets.should eq "success [\"root\"]"
+    cli.gets.should eq "success [\"root\", \"user\"]"
     # Test group list perm
     cli.puts "GROUP LIST PERMS : root"
     cli.gets.should eq "success {\"*\" => \"Write\"}"

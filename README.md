@@ -38,85 +38,166 @@ Errors:
 
 #### Authenticate on the server
 
-    AUTH : user password
-    # => success / failure
+* **Command**: `AUTH : username password`
+* **Description**: Connect a user identified with its username and its secret password.
+* **Arguments**:
+  * `username`
+  * `password`
+* **Return value**:
+  * `success`: if the username+password matche
+  * `failure`: if the username+password doesn't match
+* **Example**: `AUTH : root toor`
 
 ##### Check a resource
 
-    # Check if the user has access to a resource for the connected user
-    USER HAS_ACCESS TO : perm path
-    # => success / failure
-    USER HAS ACCESS TO : write /wiki/some/page
+* **Command**: `USER HAS_ACCESS TO : perm resource`
+* **Description**: Check if the connected user has access to a resource (path + permission)
+* **Arguments**:
+  * `perm`: usually "write"
+  * `resource`: the path of the resource. It can also be a command, etc.
+* **Return value**:
+  * `success`
+  * `failure`: if not connected / not permitted
+* **Example**: `USER HAS ACCESS TO : write /wiki/some/page`
 
-##### Manage groups
+##### Add a new permission to a group
 
-    # Add a new entry to a group (create it if needed).
-    GROUP ADD : group perm path
-    # => success / failure
-    GROUP ADD : admin write *
+* **Command**: `GROUP ADD : group perm resource`
+* **Description**: Add a new permission (perm+path) to a group. Create the group if needed.
+* **Arguments**:
+  * `group`: the concerned group
+  * `perm`: usually "write"
+  * `resource`: the path of the resource. It can also be a command, etc.
+* **Return value**:
+  * `success`
+  * `failure`: if not connected / not permitted
+* **Example**: `GROUP ADD : root * write`
 
-    # Remove a group permission.
-    GROUP REMOVE : group path
-    # => success / failure
-    GROUP REMOVE : guest *
+##### Remove a group
 
-    # Remove a group.
-    GROUP REMOVE : group
-    # => success / failure
-    GROUP REMOVE : somegroup
+* **Command**: `GROUP REMOVE : group`
+* **Description**: Delete a group with all associated permissions. Does not remove the group from the users.
+* **Arguments**:
+  * `group`: the concerned group
+* **Return value**:
+  * `success`
+  * `failure`: if not connected / not permitted
+* **Example**: `GROUP REMOVE : some_group`
 
-    # List the groups.
-    GROUP LIST
-    # => success ["group", ...] / failure
-    GROUP LIST
+##### List the existing groups
 
-    # List the permissions of a group.
-    GROUP LIST PERMS : group
-    # => success {"path" => "perm", ...} / failure
-    GROUP LIST PERMS : admin
+* **Command**: `GROUP LIST`
+* **Description**: List all the existing groups that have not been removed.
+* **Arguments**: none
+* **Return value**:
+  * `success ["group", ...]`
+  * `failure`: if not connected / not permitted
+* **Example**: `USER LIST`
 
-    # Get the permissions of a group a a fiven path
-    GROUP GET PERM : group path
-    # => success "perm" / failure
-    GROUP GET PERM : "guest"
+##### List the permissions associated to a group
 
-##### Manage the users
+* **Command**: `GROUP LIST PERMS : group`
+* **Description**: List the permissions (perm+path) associated to a group
+* **Arguments**:
+  * `group`: the concerned group
+* **Return value**:
+  * `success {"path" => "perm"}`
+  * `failure`: if not connected / not permitted
+* **Example**: `GROUP LIST PERMS : root`
 
-    # List the users
-    USER LIST
-    # => success ["group", ...] / failure
-    USER LIST
+##### Get the permission of a group on a resource
 
-    # Add a user.
-    USER ADD : user password
-    # => success / failure
-    USER ADD : root toor
+*note: it might be removed in the next versions.*
 
-    # Remove a user
-    USER REMOVE : user
-    # => success / failure
-    USER REMOVE : guest_user
+* **Command**: `GROUP GET PERM : group resource`
+* **Description**: Get the permission (perm) of a group on a given resource, without matching.
+* **Arguments**:
+  * `group`: the concerned group
+  * `resource`: resource to look at
+* **Return value**:
+  * `success "perm"`
+  * `failure`: if not connected / not permitted
+* **Example**: `GROUP GET PERM : root *`
 
-    # Add a group to a user. Create inexisting groups.
-    USER ADD GROUP : user group
-    # => success / failure
-    USER ADD GROUP : root admin
+##### List the existing users
 
-    # Remove a group from a user. Doe nothing if the group doesn't exists/...
-    USER REMOVE GROUP : user group
-    # => success / failure
-    USER REMOVE GROUP me guest
+* **Command**: `USER LIST`
+* **Description**: List all the existing users.
+* **Arguments**: none
+* **Return value**:
+  * `success ["username", ...]`
+  * `failure`: if not connected / not permitted
+* **Example**: `USER LIST`
 
-    # List the groups of a user.
-    USER LIST GROUPS : user
-    # => success ["group", ...] / failure
-    USER LIST GROUPS : \a
+##### Create a new user
 
-    # Change the password of a user.
-    USER CHANGE PASSWORD : user newpassword
-    # => success / failure
-    USER CHANGE PASSWORD : root bettertoorpassword
+* **Command**: `USER ADD : username password`
+* **Description**: Create a new user.
+* **Arguments**:
+  * `username`: identifier of the user
+  * `password`: secret of the user
+* **Return value**:
+  * `success`
+  * `failure`: if not connected / not permitted / the username already exists
+* **Example**: `USER ADD : root toor`
 
+##### Remove a user
+
+* **Command**: `USER REMOVE : username`
+* **Description**: Remove an existing user.
+* **Arguments**:
+  * `username`: identifier of the user
+* **Return value**:
+  * `success`
+  * `failure`: if not connected / not permitted
+* **Example**: `USER REMOVE : user_to_delete`
+
+##### Add a group to a user
+
+* **Command**: `USER ADD GROUP : username group`
+* **Description**: The groups belongs to the given group and has its same permissions.
+* **Arguments**:
+  * `username`: identifier of the user
+  * `group`: group to add
+* **Return value**:
+  * `success`
+  * `failure`: if not connected / not permitted / the username already exists
+* **Example**: `USER ADD GROUP : root group_of_the_administrators`
+
+##### Remove a group to a user
+
+* **Command**: `USER REMOVE GROUP : username group`
+* **Description**: The user does not belongs to the group anymore.
+* **Arguments**:
+  * `username`: identifier of the user
+  * `goup`: group to remove
+* **Return value**:
+  * `success`
+  * `failure`: if not connected / not permitted
+* **Example**: `USER REMOVE GROUP : user grpi_to_delete`
+
+##### List the groups of a user
+
+* **Command**: `USER LIST GROUP : username`
+* **Description**: Get the list of the groups of a user
+* **Arguments**:
+  * `username`: identifier of the user
+* **Return value**:
+  * `success ["group", ...]`
+  * `failure`: if not connected / not permitted
+* **Example**: `USER LIST GROUP : user`
+
+##### Change the password of a user
+
+* **Command**: `USER CHANGE PASSWORD : username password`
+* **Description**: Modifies the secret password of a user.
+* **Arguments**:
+  * `username`: identifier of the user
+  * `password`: new password to use instead of the old one
+* **Return value**:
+  * `success`
+  * `failure`: if not connected / not permitted
+* **Example**: `USER CHANGE PASSWORD : root toor_should_not_be_used_in_prod`
 
 ## Development
 

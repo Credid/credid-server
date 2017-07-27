@@ -30,6 +30,7 @@ class Auth::Server::ClientHandler
   getter client : OpenSSL::SSL::Socket::Server | TCPSocket
   property user : Acl::User?
   property authenticated : Bool
+
   delegate users, to: context
   delegate groups, to: context
 
@@ -43,12 +44,14 @@ class Auth::Server::ClientHandler
     @user.as(Acl::User)
   end
 
+  # Wait for the next command and return it when received.
   private def get_cmd
     cmd = client.gets
     client.close if cmd.nil?
     cmd
   end
 
+  # Handle a client in a loop that fetch commands and execute them, stop on EOF.
   def handle
     loop do
       cmd = get_cmd
@@ -57,15 +60,18 @@ class Auth::Server::ClientHandler
     end
   end
 
+  # Send data to the client.
   def send(msg : String)
     client.print "#{msg}\n"
     client.flush
   end
 
+  # Send "success ..." to the client.
   def send_success(msg : String? = nil)
     send msg ? "success #{msg}" : "success"
   end
 
+  # Send "failure ..." to the client.
   def send_failure(msg : String? = nil)
     send msg ? "failure #{msg}" : "failure"
   end
