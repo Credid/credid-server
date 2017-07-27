@@ -2,14 +2,23 @@ require "./client_handler/*"
 
 class Auth::Server::ClientHandler
   alias CommandHandler = Proc(ClientHandler, String, Nil)
+
   macro add_handler(cmd, handler)
     ROOT_HANDLERS[{{cmd}}] = -> {{handler}}(ClientHandler, String)
   end
+
   ROOT_HANDLERS = Hash(String, CommandHandler).new
 
   add_handler "AUTH", ClientHandler::AuthCommand.auth
-  add_handler "USER LIST GROUPS", ClientHandler::UserCommand.list_group
+
   add_handler "USER HAS ACCESS TO", ClientHandler::UserCommand.has_access_to
+  add_handler "USER ADD", ClientHandler::UserCommand.add
+  add_handler "USER REMOVE", ClientHandler::UserCommand.remove
+  add_handler "USER REMOVE GROUP", ClientHandler::UserCommand.remove_group
+  add_handler "USER ADD GROUP", ClientHandler::UserCommand.add_group
+  add_handler "USER LIST GROUPS", ClientHandler::UserCommand.list_groups
+  add_handler "USER CHANGE PASSWORD", ClientHandler::UserCommand.change_password
+
   add_handler "GROUP ADD", ClientHandler::GroupCommand.add
   add_handler "GROUP REMOVE", ClientHandler::GroupCommand.remove
   add_handler "GROUP LIST", ClientHandler::GroupCommand.list
@@ -68,7 +77,7 @@ class Auth::Server::ClientHandler
     # Verifies the permissions unless it is AUTH
     if command_words != "AUTH"
       return send_failure "not connected" if user.nil?
-      return send_failure "not permitted" unless context.groups.permitted? user.as(Acl::User), cmd, Acl::Perm::Write
+      return send_failure "not permitted (#{cmd})" unless context.groups.permitted? connected_user, cmd, Acl::Perm::Write
     end
 
     # Execute the operation if permitted

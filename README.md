@@ -87,25 +87,30 @@ Errors:
     # => success / failure
     USER ADD : root toor
 
+    # Remove a user
+    USER REMOVE : user
+    # => success / failure
+    USER REMOVE : guest_user
+
     # Add a group to a user. Create inexisting groups.
     USER ADD GROUP : user group
     # => success / failure
     USER ADD GROUP : root admin
-
-    # List the gorups of a user.
-    USER LIST GROUPS OF : user
-    # => success ["group", ...] / failure
-    USER LIST GROUPS : \a
 
     # Remove a group from a user. Doe nothing if the group doesn't exists/...
     USER REMOVE GROUP : user group
     # => success / failure
     USER REMOVE GROUP me guest
 
+    # List the groups of a user.
+    USER LIST GROUPS : user
+    # => success ["group", ...] / failure
+    USER LIST GROUPS : \a
+
     # Change the password of a user.
-    USER CHANGEPASSWORD : user newpassword
+    USER CHANGE PASSWORD : user newpassword
     # => success / failure
-    USER CHANGEPASSWORD : root bettertoorpassword
+    USER CHANGE PASSWORD : root bettertoorpassword
 
 
 ## Development

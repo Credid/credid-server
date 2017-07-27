@@ -33,7 +33,7 @@ class Auth::Server::ClientHandler
     def list_perms(context, params)
       perms = context.groups[params]?
       if perms
-        context.send_success perms.permissions.map{|k,v| {k.to_s, v.to_s} }.to_h.inspect
+        context.send_success perms.permissions.map { |k, v| {k.to_s, v.to_s} }.to_h.inspect
       else
         context.send_success "{}"
       end

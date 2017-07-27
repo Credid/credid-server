@@ -49,7 +49,7 @@ class Auth::Server::Handler
   end
 
   private def handle_client(socket, client, ssl_context = nil)
-    #puts "New client connected"
+    # puts "New client connected"
     if ssl_context
       ssl_client = OpenSSL::SSL::Socket::Server.new client, ssl_context
       ClientHandler.new(self, ssl_client).handle
