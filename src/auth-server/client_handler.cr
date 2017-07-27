@@ -12,6 +12,7 @@ class Auth::Server::ClientHandler
   add_handler "AUTH", ClientHandler::AuthCommand.auth
 
   add_handler "USER HAS ACCESS TO", ClientHandler::UserCommand.has_access_to
+  add_handler "USER LIST", ClientHandler::UserCommand.list
   add_handler "USER ADD", ClientHandler::UserCommand.add
   add_handler "USER REMOVE", ClientHandler::UserCommand.remove
   add_handler "USER REMOVE GROUP", ClientHandler::UserCommand.remove_group

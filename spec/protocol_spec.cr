@@ -1,6 +1,7 @@
 describe Auth::Server do
   it "test auth" do
     options = Auth::Server::Options.new
+    # TODO: user tmpfile
     options.users_file = "/tmp/users.yaml"
     options.groups_file = "/tmp/groups.yaml"
     handler = Auth::Server::Handler.new options
@@ -19,20 +20,32 @@ describe Auth::Server do
     cli.gets.should eq "success"
     cli.puts "USER HAS ACCESS TO : read /any/path/random"
     cli.gets.should eq "success"
+    # Test user list
+    cli.puts "USER LIST"
+    cli.gets.should eq "success [\"root\"]"
     # Test user add
     cli.puts "USER ADD : test test"
     cli.gets.should eq "success"
+    # Test user list
+    cli.puts "USER LIST"
+    cli.gets.should eq "success [\"root\", \"test\"]"
     # Test user group list
     cli.puts "USER LIST GROUPS : test"
-    cli.gets.should eq "success []"
+    cli.gets.should eq "success [\"user\"]"
     # Test user add group
     cli.puts "USER ADD GROUP : test gtest"
     cli.gets.should eq "success"
     # Test user group list
     cli.puts "USER LIST GROUPS : test"
-    cli.gets.should eq "success [\"gtest\"]"
+    cli.gets.should eq "success [\"user\", \"gtest\"]"
     # Test user remove group
     cli.puts "USER REMOVE GROUP : test gtest"
+    cli.gets.should eq "success"
+    # Test user group list
+    cli.puts "USER LIST GROUPS : test"
+    cli.gets.should eq "success [\"user\"]"
+    # Test user remove group
+    cli.puts "USER REMOVE GROUP : test user"
     cli.gets.should eq "success"
     # Test user group list
     cli.puts "USER LIST GROUPS : test"
@@ -40,6 +53,9 @@ describe Auth::Server do
     # Test user remove
     cli.puts "USER REMOVE : test"
     cli.gets.should eq "success"
+    # Test user list
+    cli.puts "USER LIST"
+    cli.gets.should eq "success [\"root\"]"
 
     # Test add a new perm
     cli.puts "GROUP ADD : root read /any/path/random"

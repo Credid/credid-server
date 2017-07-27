@@ -8,6 +8,11 @@ class Auth::Server::ClientHandler
       acl ? context.send_success : context.send_failure
     end
 
+    def list(context, params)
+      users = context.users.list.keys
+      context.send_success users.inspect
+    end
+
     def add(context, params)
       name, password = params.split ' ', 2
       begin

@@ -14,10 +14,14 @@ class Auth::Server::Handler
   def initialize(@options)
     @users = Acl::Users.new(@options.users_file).load!
     @groups = Acl::Groups.new(@options.groups_file).load!
+    initialize_default_configuration!
+  end
+
+  def initialize_default_configuration!
     @users.register! name: "root", password: "toor", groups: %w(root) if @users.list.empty?
     if @groups.groups.empty?
-      @groups.add "toor"
-      @groups["toor"]["*"] = Acl::Perm::Write
+      @groups.add "root"
+      @groups["root"]["*"] = Acl::Perm::Write
       @groups.save!
     end
   end
