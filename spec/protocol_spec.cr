@@ -1,9 +1,10 @@
 describe Auth::Server do
   it "test auth" do
     options = Auth::Server::Options.new
-    # TODO: user tmpfile
-    options.users_file = "/tmp/users.yaml"
-    options.groups_file = "/tmp/groups.yaml"
+    users_file = Tempfile.new("protocol_test_users.yaml")
+    groups_file = Tempfile.new("protocol_test_groups.yaml")
+    options.users_file = users_file.path
+    options.groups_file = groups_file.path
     options.verbosity = false
     handler = Auth::Server::Handler.new options
     server_fiber = spawn { handler.start }
@@ -85,5 +86,7 @@ describe Auth::Server do
     cli.gets.should eq "success \"None\""
     cli.close
     handler.stop
+    users_file.unlink
+    groups_file.unlink
   end
 end
