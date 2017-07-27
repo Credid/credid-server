@@ -35,7 +35,13 @@ describe Auth::Server do
     # Test group list perm
     cli.puts "GROUP LIST PERMS : root"
     cli.gets.should eq "success {\"*\" => \"Write\"}"
-
+    # test group get perm
+    cli.puts "GROUP GET PERM : root *"
+    cli.gets.should eq "success \"Write\""
+    cli.puts "GROUP GET PERM : root /not/exists"
+    cli.gets.should eq "success \"None\""
+    cli.puts "GROUP GET PERM : randomgroup /not/exists"
+    cli.gets.should eq "success \"None\""
     cli.close
     handler.stop
   end

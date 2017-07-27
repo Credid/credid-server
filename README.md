@@ -67,17 +67,17 @@ Errors:
 
     # List the groups.
     GROUP LIST
-    # => success\n["group", ...] / failure
+    # => success ["group", ...] / failure
     GROUP LIST
 
     # List the permissions of a group.
     GROUP LIST PERMS : group
-    # => success\n{"path" => "perm", ...} / failure
+    # => success {"path" => "perm", ...} / failure
     GROUP LIST PERMS : admin
 
     # Get the permissions of a group a a fiven path
     GROUP GET PERM : group path
-    # => success\n"perm" / failure
+    # => success "perm" / failure
     GROUP GET PERM : "guest"
 
 ##### Manage the users
@@ -94,7 +94,7 @@ Errors:
 
     # List the gorups of a user.
     USER LIST GROUPS OF : user
-    # => success\n["group", ...] / failure
+    # => success ["group", ...] / failure
     USER LIST GROUPS : \a
 
     # Remove a group from a user. Doe nothing if the group doesn't exists/...

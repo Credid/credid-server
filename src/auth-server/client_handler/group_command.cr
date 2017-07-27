@@ -38,5 +38,11 @@ class Auth::Server::ClientHandler
         context.send_success "{}"
       end
     end
+
+    def get_perm(context, params)
+      group, path = params.split ' ', 2
+      group = context.groups[group]?
+      context.send_success((group ? group[path].to_s : "None").inspect)
+    end
   end
 end
