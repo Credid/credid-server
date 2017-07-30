@@ -84,6 +84,7 @@ describe Auth::Server do
     cli.gets.should eq "success \"None\""
     cli.puts "GROUP GET PERM : randomgroup /not/exists"
     cli.gets.should eq "success \"None\""
+
     cli.close
     handler.stop
     users_file.unlink

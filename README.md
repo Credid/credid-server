@@ -30,7 +30,7 @@ In the paths:
 * `*`: character is replaced with `.+` (unless escaped with `\`)
 * `$`: character is replaced with `\[a-zA-Z0-9][a-zA-Z0-9_-]+` (unless escaped with `\`)
 * `\a`: is replaced with the username of the current authenticated user (the `\a` is never registrated, it is replaced by the real name)
-* `\u`: is replaced with the user that executes the request
+* `~`: is replaced with the user that executes the request
 
 Errors:
 

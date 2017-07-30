@@ -52,9 +52,9 @@ class Acl::Groups < Lockable
   # user = User.new ...
   # acls.permitted?(user, "/my/path", Perm::Read)
   # ```
-  def permitted?(entity : Acl::Entity, path : String, access : Acl::Perm)
+  def permitted?(entity : Acl::Entity, path : String, access : Acl::Perm, replace : Hash(Regex, String)? = nil)
     entity.groups.any? do |group|
-      @groups[group]? ? @groups[group].permitted?(path, access) : false
+      @groups[group]? ? @groups[group].permitted?(path, access, replace) : false
     end
   end
 

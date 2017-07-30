@@ -77,6 +77,9 @@ class Auth::Server::ClientHandler
   end
 
   private def handle_command(cmd)
+    # Handles \a
+    cmd = cmd.gsub "\\a", connected_user.name unless user.nil?
+
     command_split = cmd.split ':', 2
     command_words = command_split[0].strip
     params = (command_split[1]? || "").strip
@@ -84,7 +87,7 @@ class Auth::Server::ClientHandler
     # Verifies the permissions unless it is AUTH
     if command_words != "AUTH"
       return send_failure "not connected" if user.nil?
-      return send_failure "not permitted (#{cmd})" unless context.groups.permitted? connected_user, cmd, Acl::Perm::Write
+      return send_failure "not permitted (#{cmd})" unless context.groups.permitted? connected_user, cmd, Acl::Perm::Write, {/~/ => connected_user.name}
     end
 
     # Execute the operation if permitted
@@ -93,7 +96,7 @@ class Auth::Server::ClientHandler
     begin
       handler_function.as(CommandHandler).call(self, params)
     rescue err
-      send_failure "failed to execute command #{command_words} (#{err})"
+      send_failure "cannot execute command #{command_words} (#{err})"
     end
   end
 end

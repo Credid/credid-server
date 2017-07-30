@@ -54,8 +54,8 @@ class Acl::Group
   # guest.permitted "/public", Acl::Perm::Write # => false
   # guest.permitted "/other", Acl::Perm::Read   # => false
   # ```
-  def permitted?(path : String, access : Acl::Perm) : Bool
-    matched_permissions = @permissions.select { |pe, _| pe.acl_match?(path) }
+  def permitted?(path : String, access : Acl::Perm, replace : Hash(Regex, String)? = nil) : Bool
+    matched_permissions = @permissions.select { |pe, _| pe.acl_match?(path, replace) }
     if matched_permissions.empty?
       default.to_i >= access.to_i
     else

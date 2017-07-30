@@ -4,7 +4,9 @@ class Auth::Server::ClientHandler
 
     def add(context, params)
       group, perm, path = params.split ' ', 3
-      context.groups[group][path] = Acl::PERM_STR[perm]
+      pp group, perm, path
+      group = context.groups[group]?
+      group[path] = Acl::PERM_STR[perm] if group
       context.send_success
     end
 
