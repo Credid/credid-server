@@ -4,21 +4,26 @@ class Auth::Server::ClientHandler
 
     def add(context, params)
       group, perm, path = params.split ' ', 3
-      pp group, perm, path
-      group = context.groups[group]?
-      group[path] = Acl::PERM_STR[perm] if group
-      context.send_success
+      context.groups.transaction! do |groups|
+        group_e = groups[group]?
+        group_e[path] = Acl::PERM_STR[perm] unless group_e.nil?
+        context.send_success
+      end
     end
 
     private def remove_path(context, group, path)
-      group = context.groups[group]?
-      group.delete path if group
-      context.send_success
+      context.groups.transaction! do |groups|
+        group_e = groups[group]?
+        group_e.delete path unless group_e.nil?
+        context.send_success
+      end
     end
 
     private def remove_group(context, group)
-      context.groups.delete group
-      context.send_success
+      context.groups.transaction! do |groups|
+        groups.delete group
+        context.send_success
+      end
     end
 
     def remove(context, params)
