@@ -23,9 +23,9 @@ class Auth::Server::Handler
       @groups.add "root"
       @groups["root"]["*"] = Acl::Perm::Write
       @groups.add "user"
-      # @groups["user"]["USER CHANGE PASSWORD : \\u *"] = Acl::Perm::Write
-      # @groups["user"]["USER REMOVE : \\u"] = Acl::Perm::Write
-      # @groups["user"]["USER LIST GROUPS : \\u"] = Acl::Perm::Write
+      @groups["user"]["USER CHANGE PASSWORD : ~ *"] = Acl::Perm::Write
+      @groups["user"]["USER REMOVE : ~"] = Acl::Perm::Write
+      @groups["user"]["USER LIST GROUPS : ~"] = Acl::Perm::Write
       @groups.save!
     end
   end

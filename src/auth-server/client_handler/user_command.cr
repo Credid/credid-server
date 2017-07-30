@@ -3,8 +3,9 @@ class Auth::Server::ClientHandler
     extend self
 
     def has_access_to(context, params)
-      perm, path = params.split ' ', 2
-      acl = context.groups.permitted? context.connected_user, path, Acl::PERM_STR[perm]
+      user, perm, path = params.split ' ', 3
+      user = context.users[user]?
+      acl = context.groups.permitted? user, path, Acl::PERM_STR[perm] unless user.nil?
       acl ? context.send_success : context.send_failure
     end
 

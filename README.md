@@ -51,9 +51,10 @@ Errors:
 
 ##### Check a resource
 
-* **Command**: `USER HAS_ACCESS TO : perm resource`
+* **Command**: `USER HAS ACCESS TO : username perm resource`
 * **Description**: Check if the connected user has access to a resource (path + permission)
 * **Arguments**:
+  * `username`: identifier of the concerned user
   * `perm`: usually "write"
   * `resource`: the path of the resource. It can also be a command, etc.
 * **Return value**:
