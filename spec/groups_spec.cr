@@ -6,6 +6,7 @@ describe Acl::Groups do
      name: "root",
      permissions: {
        "/public/~/*" => Acl::Perm::Write,
+       "/notpublic/\\~/*" => Acl::Perm::Write,
        },
      default: Acl::Perm::None
    )
@@ -15,6 +16,9 @@ describe Acl::Groups do
    perm = groups.permitted? connected_user, "/public/root/any", Acl::Perm::Write, {/~/ => connected_user.name}
    perm.should eq true
    perm = groups.permitted? connected_user, "/public/other/any", Acl::Perm::Write, {/~/ => connected_user.name}
+   perm.should eq false
+   # test with backslash
+   perm = groups.permitted? connected_user, "/notpublic/root/any", Acl::Perm::Write, {/~/ => connected_user.name}
    perm.should eq false
  end
 end
