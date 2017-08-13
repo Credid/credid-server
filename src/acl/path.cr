@@ -4,7 +4,8 @@ class Acl::Path
   )
 
   getter value : String
-  #getter regex : Regex?
+
+  # getter regex : Regex?
 
   def self.value_to_regex(value : String)
     value_regex = value.gsub('*', ".*")
@@ -14,7 +15,7 @@ class Acl::Path
   end
 
   def initialize(@value : String)
-    #@regex = Acl::Path.value_to_regex(@value)
+    # @regex = Acl::Path.value_to_regex(@value)
   end
 
   def regex(replace : Hash(Regex, String)? = nil)
