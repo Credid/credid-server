@@ -1,6 +1,10 @@
 require "./client_handler/*"
 
 class Auth::Server::ClientHandler
+  DEFAULT_OPTIONS = {
+    page: 0_u64,
+    count: 100_u64,
+  }
   alias CommandHandler = Proc(ClientHandler, NamedTuple(page: UInt64, count: UInt64), String, Nil)
 
   macro add_handler(cmd, handler)
@@ -92,8 +96,8 @@ class Auth::Server::ClientHandler
     end
 
     options = {
-        page: (options_hash["PAGE"]? || 0_u64).to_u64,
-        count: (options_hash["COUNT"]? || 0_u64).to_u64,
+        page: (options_hash["PAGE"]? || DEFAULT_OPTIONS[:page]).to_u64,
+        count: (options_hash["COUNT"]? || DEFAULT_OPTIONS[:count]).to_u64,
       }
     {cmd, options}
   end
