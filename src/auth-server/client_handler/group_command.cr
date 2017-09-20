@@ -2,7 +2,7 @@ class Auth::Server::ClientHandler
   module GroupCommand
     extend self
 
-    def add(context, params)
+    def add(context, options, params)
       group, perm, path = params.split ' ', 3
       context.groups.transaction! do |groups|
         group_e = groups[group]?
@@ -26,18 +26,18 @@ class Auth::Server::ClientHandler
       end
     end
 
-    def remove(context, params)
+    def remove(context, options, params)
       splitted_params = params.split ' ', 2
       group = splitted_params[0]
       path = splitted_params[1]?
       path ? remove_path(context, group, path) : remove_group(context, group)
     end
 
-    def list(context, params)
+    def list(context, options, params)
       context.send_success context.groups.groups.keys.inspect
     end
 
-    def list_perms(context, params)
+    def list_perms(context, options, params)
       perms = context.groups[params]?
       if perms
         context.send_success perms.permissions.map { |k, v| {k.to_s, v.to_s} }.to_h.inspect
@@ -46,7 +46,7 @@ class Auth::Server::ClientHandler
       end
     end
 
-    def get_perm(context, params)
+    def get_perm(context, options, params)
       group, path = params.split ' ', 2
       group = context.groups[group]?
       context.send_success((group ? group[path].to_s : "None").inspect)
