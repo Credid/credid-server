@@ -1,3 +1,4 @@
+require "./query"
 require "./client_handler/*"
 
 class Auth::Server::ClientHandler
@@ -5,10 +6,11 @@ class Auth::Server::ClientHandler
     page: 0_u64,
     count: 100_u64,
   }
-  alias CommandHandler = Proc(ClientHandler, NamedTuple(page: UInt64, count: UInt64), String, Nil)
+  alias Options = NamedTuple(page: UInt64, count: UInt64)
+  alias CommandHandler = Proc(ClientHandler, Options, String, Nil)
 
   macro add_handler(cmd, handler)
-    ROOT_HANDLERS[{{cmd}}] = -> {{handler}}(ClientHandler, NamedTuple(page: UInt64, count: UInt64), String)
+    ROOT_HANDLERS[{{cmd}}] = -> {{handler}}(ClientHandler, Options, String)
   end
 
   ROOT_HANDLERS = Hash(String, CommandHandler).new

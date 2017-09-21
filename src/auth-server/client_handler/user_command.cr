@@ -11,7 +11,7 @@ class Auth::Server::ClientHandler
 
     def list(context, options, params)
       users = context.users.list.keys
-      context.send_success users.inspect
+      context.send_success Query.apply_options_on(users, options).inspect
     end
 
     def add(context, options, params)
@@ -51,7 +51,7 @@ class Auth::Server::ClientHandler
 
     def list_groups(context, options, params)
       user = context.users[params]?
-      context.send_success(user ? user.groups.inspect : "[]")
+      context.send_success(user ? Query.apply_options_on(user.groups, options).inspect : "[]")
     end
 
     def change_password(context, options, params)

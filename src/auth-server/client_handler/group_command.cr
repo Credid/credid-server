@@ -34,13 +34,15 @@ class Auth::Server::ClientHandler
     end
 
     def list(context, options, params)
-      context.send_success context.groups.groups.keys.inspect
+      groups = context.groups.groups.keys
+      context.send_success Query.apply_options_on(groups, options).inspect
     end
 
     def list_perms(context, options, params)
       perms = context.groups[params]?
       if perms
-        context.send_success perms.permissions.map { |k, v| {k.to_s, v.to_s} }.to_h.inspect
+        perms = perms.permissions.map { |k, v| {k.to_s, v.to_s} }.to_h
+        context.send_success Query.apply_options_on(perms, options).inspect
       else
         context.send_success "{}"
       end
