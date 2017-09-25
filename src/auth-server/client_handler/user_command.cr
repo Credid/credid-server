@@ -35,7 +35,7 @@ class Auth::Server::ClientHandler
       user, group = params.split ' ', 2
       context.users.transaction! do |users|
         user = users[user.to_s]?
-        user.groups << group if user
+        user.groups << group if user && !user.groups.includes?(group)
       end
       context.send_success
     end
