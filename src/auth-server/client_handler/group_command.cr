@@ -3,7 +3,8 @@ class Auth::Server::ClientHandler
     extend self
 
     def add(context, options, params)
-      group, perm, path = params.split ' ', 3
+      tmp = params.split ' ', 3
+      group, perm, path = tmp[0], tmp[1]?, tmp[2]?
       context.groups.transaction! do |groups|
         group_e = groups.add(group)[group]
         group_e[path] = Acl::PERM_STR[perm] if perm && path
