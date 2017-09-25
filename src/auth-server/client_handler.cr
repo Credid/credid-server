@@ -3,7 +3,7 @@ require "./client_handler/*"
 
 class Auth::Server::ClientHandler
   DEFAULT_OPTIONS = {
-    page: 0_u64,
+    page:  0_u64,
     count: 100_u64,
   }
   alias Options = NamedTuple(page: UInt64, count: UInt64)
@@ -98,9 +98,9 @@ class Auth::Server::ClientHandler
     end
 
     options = {
-        page: (options_hash["PAGE"]? || DEFAULT_OPTIONS[:page]).to_u64,
-        count: (options_hash["COUNT"]? || DEFAULT_OPTIONS[:count]).to_u64,
-      }
+      page:  (options_hash["PAGE"]? || DEFAULT_OPTIONS[:page]).to_u64,
+      count: (options_hash["COUNT"]? || DEFAULT_OPTIONS[:count]).to_u64,
+    }
     {cmd, options}
   end
 
@@ -117,7 +117,7 @@ class Auth::Server::ClientHandler
     if command_words != "AUTH"
       return send_failure "not connected" if user.nil?
       return send_failure "not permitted (#{cmd})" unless context.groups.permitted? connected_user, cmd, Acl::Perm::Write, {/~/ => connected_user.name}
-    #/ }
+      # / }
     end
 
     # Execute the operation if permitted

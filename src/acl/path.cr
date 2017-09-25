@@ -19,8 +19,8 @@ class Acl::Path
   end
 
   def regex(replace : Hash(Regex, String)? = nil)
-    replace.map { |k, v| { Regex.new("(?!\\\\)" + k.source), v} }.
-      each { |from, to| @value = @value.gsub(from, to) } unless replace.nil?
+    replace.map { |k, v| {Regex.new("(?!\\\\)" + k.source), v} }
+           .each { |from, to| @value = @value.gsub(from, to) } unless replace.nil?
     Acl::Path.value_to_regex(@value)
   end
 
