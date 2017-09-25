@@ -5,8 +5,8 @@ class Auth::Server::ClientHandler
     def add(context, options, params)
       group, perm, path = params.split ' ', 3
       context.groups.transaction! do |groups|
-        group_e = groups[group]?
-        group_e[path] = Acl::PERM_STR[perm] unless group_e.nil?
+        group_e = groups.add(group)[group]
+        group_e[path] = Acl::PERM_STR[perm] if perm && path
         context.send_success
       end
     end

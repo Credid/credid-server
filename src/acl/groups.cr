@@ -63,12 +63,12 @@ class Acl::Groups < Lockable
   # end
 
   def add(group : String)
-    @groups[group] = Group.new(group)
+    @groups[group] = Group.new(group) unless @groups[group]?
     self
   end
 
   def add(group : Acl::Group)
-    @groups[group.name] = group
+    @groups[group.name] = group unless @groups[group.name]?
     group
   end
 
@@ -99,7 +99,7 @@ class Acl::Groups < Lockable
   end
 
   def group_exists?(group : String) : Bool
-    @groups.keys.includes? group
+    @groups.keys.includes?(group)
   end
 
   def group_exists?(group : Acl::Groum) : Bool

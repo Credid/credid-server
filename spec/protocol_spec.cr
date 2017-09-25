@@ -86,6 +86,16 @@ describe Auth::Server do
     cli.gets.should eq "success \"None\""
     cli.puts "GROUP GET PERM : randomgroup /not/exists"
     cli.gets.should eq "success \"None\""
+    # Test group add
+    cli.puts "GROUP ADD : test write *"
+    cli.gets.should eq "success"
+    cli.puts "GROUP LIST"
+    cli.gets.should eq "success [\"root\", \"user\", \"test\"]"
+    cli.puts "GROUP REMOVE : test"
+    cli.gets.should eq "success"
+    cli.puts "GROUP LIST"
+    cli.gets.should eq "success [\"root\", \"user\"]"
+    cli.puts "GROUP REMOVE : test"
 
     cli.close
     handler.stop
