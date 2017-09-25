@@ -2,6 +2,7 @@ class Auth::Server::ClientHandler
   module UserCommand
     extend self
 
+    # Check if a user has the access to the given resource.
     def has_access_to(context, options, params)
       user, perm, path = params.split ' ', 3
       user = context.users[user]?
@@ -9,11 +10,13 @@ class Auth::Server::ClientHandler
       acl ? context.send_success : context.send_failure
     end
 
+    # List all the users.
     def list(context, options, params)
       users = context.users.list.keys
       context.send_success Query.apply_options_on(users, options).inspect
     end
 
+    # Create a new user.
     def add(context, options, params)
       name, password = params.split ' ', 2
       begin
@@ -24,6 +27,7 @@ class Auth::Server::ClientHandler
       end
     end
 
+    # Remove an existing user.
     def remove(context, options, params)
       context.users.transaction! do |users|
         users.delete params
@@ -31,6 +35,7 @@ class Auth::Server::ClientHandler
       context.send_success
     end
 
+    # Add the user to a group.
     def add_group(context, options, params)
       user, group = params.split ' ', 2
       context.users.transaction! do |users|
@@ -40,6 +45,7 @@ class Auth::Server::ClientHandler
       context.send_success
     end
 
+    # Remove a group from a user.
     def remove_group(context, options, params)
       user, group = params.split ' ', 2
       context.users.transaction! do |users|
@@ -49,11 +55,13 @@ class Auth::Server::ClientHandler
       context.send_success
     end
 
+    # List the groups of a user.
     def list_groups(context, options, params)
       user = context.users[params]?
       context.send_success(user ? Query.apply_options_on(user.groups, options).inspect : "[]")
     end
 
+    # Change the password of a user.
     def change_password(context, options, params)
       user, password = params.split ' ', 2
       context.users.transaction! do |users|
