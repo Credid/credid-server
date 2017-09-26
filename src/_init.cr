@@ -1,4 +1,4 @@
 require "./lockable"
 
 require "./acl/**"
-require "./auth-server/**"
+require "./credid-server/**"

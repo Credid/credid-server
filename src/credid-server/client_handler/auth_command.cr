@@ -1,5 +1,5 @@
-class Auth::Server::ClientHandler
-  module AuthCommand
+class Credid::Server::ClientHandler
+  module CredidCommand
     extend self
 
     def auth(context, options, params)

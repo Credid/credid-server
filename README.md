@@ -1,4 +1,4 @@
-# auth-server
+# credid-server
 
 Authentication and permission management server.
 
@@ -8,7 +8,7 @@ Authentication and permission management server.
 
 ## Usage
 
-    ./auth-server --ip 127.0.0.1 --port 8999
+    ./credid-server --ip 127.0.0.1 --port 8999
 
 ### Protocol
 

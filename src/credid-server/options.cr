@@ -1,6 +1,6 @@
 require "option_parser"
 
-module Auth::Server
+module Credid::Server
   class Options
     property port : UInt16
     property ip : String

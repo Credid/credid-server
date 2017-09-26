@@ -1,5 +1,5 @@
 require "./_init"
 
-options = Auth::Server::Options.new.parse!
-handler = Auth::Server::Handler.new options
+options = Credid::Server::Options.new.parse!
+handler = Credid::Server::Handler.new options
 handler.start

@@ -1,4 +1,4 @@
-class Auth::Server::ClientHandler
+class Credid::Server::ClientHandler
   module Query
     extend self
 

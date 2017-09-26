@@ -1,4 +1,4 @@
-NAME=auth-server
+NAME=credid-server
 
 all: deps_opt build
 

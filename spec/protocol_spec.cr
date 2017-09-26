@@ -1,19 +1,19 @@
-require "../src/auth-server/handler"
+require "../src/credid-server/handler"
 
-describe Auth::Server do
+describe Credid::Server do
   it "test auth" do
-    options = Auth::Server::Options.new
+    options = Credid::Server::Options.new
     users_file = Tempfile.new("protocol_test_users.yaml")
     groups_file = Tempfile.new("protocol_test_groups.yaml")
     options.users_file = users_file.path
     options.groups_file = groups_file.path
     options.verbosity = false
-    handler = Auth::Server::Handler.new options
+    handler = Credid::Server::Handler.new options
     server_fiber = spawn { handler.start }
 
     sleep 0.2
     cli = TCPSocket.new "127.0.0.1", 8999
-    # Auth
+    # Credid
     cli.puts "AUTH : root toor"
     cli.gets(chomp: false).should eq "success\n"
     # Test basic groups

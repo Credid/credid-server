@@ -4,8 +4,8 @@ require "openssl"
 require "./options"
 require "./client_handler"
 
-class Auth::Server::Handler
-  getter options : Auth::Server::Options
+class Credid::Server::Handler
+  getter options : Credid::Server::Options
   getter users : Acl::Users
   getter groups : Acl::Groups
   # Used to close the server during the execution
@@ -33,7 +33,7 @@ class Auth::Server::Handler
   def start
     server = TCPServer.new @options.ip, @options.port
     @socket = server
-    puts "Auth-Server started on #{@options.ip}:#{@options.port} (#{@options.ssl ? "secure" : "unsecure"})" if @options.verbosity
+    puts "Credid-Server started on #{@options.ip}:#{@options.port} (#{@options.ssl ? "secure" : "unsecure"})" if @options.verbosity
 
     context = nil
     if @options.ssl

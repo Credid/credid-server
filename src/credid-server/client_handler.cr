@@ -1,7 +1,7 @@
 require "./query"
 require "./client_handler/*"
 
-class Auth::Server::ClientHandler
+class Credid::Server::ClientHandler
   DEFAULT_OPTIONS = {
     page:  0_u64,
     count: 100_u64,
@@ -15,7 +15,7 @@ class Auth::Server::ClientHandler
 
   ROOT_HANDLERS = Hash(String, CommandHandler).new
 
-  add_handler "AUTH", ClientHandler::AuthCommand.auth
+  add_handler "AUTH", ClientHandler::CredidCommand.auth
 
   add_handler "USER HAS ACCESS TO", ClientHandler::UserCommand.has_access_to
   add_handler "USER LIST", ClientHandler::UserCommand.list
