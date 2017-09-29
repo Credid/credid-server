@@ -10,10 +10,12 @@ class Credid::Server::Handler
   getter groups : Acl::Groups
   # Used to close the server during the execution
   @socket : TCPSocket?
+  @handlers : Array(ClientHandler)
 
   def initialize(@options)
     @users = Acl::Users.new(@options.users_file).load!
     @groups = Acl::Groups.new(@options.groups_file).load!
+    @handlers = Array(ClientHandler).new
     initialize_default_configuration!
   end
 
@@ -51,6 +53,20 @@ class Credid::Server::Handler
     end
   end
 
+  def disconnect_user(username : String)
+    STDERR.puts "DISCONNECT_USER(#{username})"
+    @handlers.select do |handler|
+      (user = handler.user) && user.name == username
+    end.each do |selected_handler|
+      selected_handler.stream.send "DISCONNECT"
+    end
+  end
+
+  def update_connection(client_handler : ClientHandler)
+    # ... ?
+    return nil
+  end
+
   # TODO: check ssl socket too
   def stop
     @socket.as(TCPServer).close unless @socket.nil?
@@ -58,11 +74,15 @@ class Credid::Server::Handler
 
   private def handle_client(socket, client, ssl_context = nil)
     puts "New client connected" if @options.verbosity
-    if ssl_context
+    handler = (if ssl_context
       ssl_client = OpenSSL::SSL::Socket::Server.new client, ssl_context
-      ClientHandler.new(self, ssl_client).handle
+      ClientHandler.new(self, ssl_client)
     else
-      ClientHandler.new(self, client).handle
-    end
+      ClientHandler.new(self, client)
+    end)
+    @handlers << handler
+    handler.start
+    # Garbage collect
+    @handlers.delete handler
   end
 end

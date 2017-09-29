@@ -36,11 +36,12 @@ class Credid::Server::ClientHandler
   getter client : OpenSSL::SSL::Socket::Server | TCPSocket
   property user : Acl::User?
   property authenticated : Bool
+  getter stream : Channel(String)
 
   delegate users, to: context
   delegate groups, to: context
 
-  def initialize(@context, @client)
+  def initialize(@context, @client, @stream = Channel::Buffered(String).new)
     @user = nil
     @authenticated = false
   end
@@ -58,7 +59,7 @@ class Credid::Server::ClientHandler
   end
 
   # Handle a client in a loop that fetch commands and execute them, stop on EOF.
-  def handle
+  def start
     loop do
       cmd = get_cmd
       break if cmd.nil?
@@ -68,6 +69,7 @@ class Credid::Server::ClientHandler
 
   # Send data to the client.
   def send(msg : String)
+    #STDERR.print "#{msg}\n"
     client.print "#{msg}\n"
     client.flush
   end
@@ -105,6 +107,13 @@ class Credid::Server::ClientHandler
   end
 
   private def handle_command(cmd)
+    # Disconnect if needed
+    if !@stream.empty? && @stream.receive? == "DISCONNECT"
+      @authenticated = false
+      @user = nil
+      @context.update_connection self
+    end
+
     # Handles \a
     cmd = cmd.gsub "\\a", connected_user.name unless user.nil?
 

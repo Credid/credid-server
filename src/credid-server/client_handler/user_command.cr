@@ -31,6 +31,7 @@ class Credid::Server::ClientHandler
     def remove(context, options, params)
       context.users.transaction! do |users|
         users.delete params
+        context.context.disconnect_user(params)
       end
       context.send_success
     end
@@ -69,6 +70,7 @@ class Credid::Server::ClientHandler
         if user
           user.password = password
           user.encrypt!
+          context.context.disconnect_user(user.name)
         end
       end
       context.send_success
