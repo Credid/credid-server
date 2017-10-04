@@ -20,7 +20,7 @@ class Credid::Server::Handler
   end
 
   def initialize_default_configuration!
-    @users.register! name: "root", password: "toor", groups: %w(root) if @users.list.empty?
+    @users.register! name: "root", password: "toor", groups: %w(root), cost: @options.password_cost if @users.list.empty?
     if @groups.groups.empty?
       @groups.add "root"
       @groups["root"]["*"] = Acl::Perm::Write

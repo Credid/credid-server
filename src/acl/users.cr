@@ -147,8 +147,8 @@ class Acl::Users < Lockable
   #
   # Registers a new user by create a new `User` with `name`, `password` and `groups`
   # and then update the file with the new list of users.
-  def register!(name : String, password : String, groups : Array(String) = %w(user))
-    user = User.new(name, password, groups).encrypt!
+  def register!(name : String, password : String, groups : Array(String) = %w(user), cost : Int32 = Crypto::Bcrypt::DEFAULT_COST)
+    user = User.new(name: name, password: password, groups: groups, cost: cost).encrypt!
     self.transaction! do |users|
       users.add user
     end

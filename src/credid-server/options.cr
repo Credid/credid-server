@@ -10,6 +10,7 @@ module Credid::Server
     property users_file : String
     property groups_file : String
     property verbosity : Bool
+    property password_cost : Int32
 
     def initialize
       @port = 8999_u16
@@ -18,6 +19,7 @@ module Credid::Server
       @ssl_key_file = "private.key"
       @ssl_cert_file = "cert.pem"
       @users_file = "users.yaml"
+      @password_cost = 11
       @groups_file = "groups.yaml"
       @verbosity = true
     end
@@ -33,6 +35,7 @@ module Credid::Server
         parser.on("-u=UFILE", "--users=FILE", "Specify the users database file") { |f| @users_file = f }
         parser.on("-a=AFILE", "--groups=FILE", "Specify the groups database file") { |f| @groups_file = f }
         parser.on("-q", "--quiet", "Disable verbosity") { |v| @verbosity = false }
+        parser.on("--password-cost=COST", "The cost to decrypt each password (default 11)") { |cost| @password_cost = UInt8.new(cost).to_i }
         parser.on("-h", "--help", "Show this help") { puts parser; exit }
       end
       self

@@ -20,7 +20,7 @@ class Credid::Server::ClientHandler
     def add(context, options, params)
       name, password = params.split ' ', 2
       begin
-        context.users.register! name, password
+        context.users.register! name: name, password: password, cost: context.context.options.password_cost
         context.send_success
       rescue err
         context.send_failure "cannot register this user #{err}"

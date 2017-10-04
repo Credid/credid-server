@@ -18,13 +18,14 @@ class Acl::User
     password: String,
     groups: Array(String),
     token: String?,
+    cost: Int32,
   )
 
   # ```
   # User.new "admin", "password", %w(admin user)
   # User.new "nephos", "password", %w(user guest)
   # ```
-  def initialize(@name, @password, @groups = [] of String, @token : String? = nil)
+  def initialize(@name, @password, @groups = [] of String, @token : String? = nil, @cost = Crypto::Bcrypt::DEFAULT_COST)
     raise "Invalid name #{@name}" if !@name =~ /^[A-Za-z0-9_-]+$/ # Security: Avoid escaping and injection of code
   end
 
@@ -34,7 +35,7 @@ class Acl::User
   # User.new("admin", "password", %w(admin)).encrypt!.password # => "$2a$11$G2i2.Km1DRbJtqDBFRhKXuSn8IwNVt7AypAP328T1OYq0wBugkgCm"
   # ```
   def encrypt!
-    @password = Crypto::Bcrypt::Password.create(@password).to_s
+    @password = Crypto::Bcrypt::Password.create(@password, cost: @cost).to_s
     self
   end
 
