@@ -76,12 +76,16 @@ class Credid::Server::ClientHandler
 
   # Send "success ..." to the client.
   def send_success(msg : String? = nil)
-    send msg ? "success #{msg}" : "success"
+    success = msg ? "success #{msg}" : "success"
+    STDERR.puts success
+    send success
   end
 
   # Send "failure ..." to the client.
   def send_failure(msg : String? = nil)
-    send msg ? "failure #{msg}" : "failure"
+    failure = msg ? "failure #{msg} : failure" : "failure"
+    STDERR.puts failure
+    send failure
   end
 
   # Extract the options of the command and
@@ -114,6 +118,7 @@ class Credid::Server::ClientHandler
       @context.update_connection self
     end
 
+
     # Handles \a
     cmd = cmd.gsub "\\a", connected_user.name unless user.nil?
 
@@ -121,6 +126,11 @@ class Credid::Server::ClientHandler
     command_split = cmd.split ':', 2
     command_words = command_split[0].strip
     params = (command_split[1]? || "").strip
+
+    STDERR.print "[#{@user ? @user.as(Acl::User).name : "*undef*"}]"
+    STDERR.print " => "
+    STDERR.print command_words == "AUTH" ? "AUTH : #{params.split(" ").first}" : "#{cmd.inspect}"
+    STDERR.print " => "
 
     # Verifies the permissions unless it is AUTH
     if command_words != "AUTH"

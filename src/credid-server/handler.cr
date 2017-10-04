@@ -35,7 +35,7 @@ class Credid::Server::Handler
   def start
     server = TCPServer.new @options.ip, @options.port
     @socket = server
-    puts "Credid-Server started on #{@options.ip}:#{@options.port} (#{@options.ssl ? "secure" : "unsecure"})" if @options.verbosity
+    STDOUT.puts "Credid-Server started on #{@options.ip}:#{@options.port} (#{@options.ssl ? "secure" : "unsecure"})" if @options.verbosity
 
     context = nil
     if @options.ssl
@@ -73,7 +73,7 @@ class Credid::Server::Handler
   end
 
   private def handle_client(socket, client, ssl_context = nil)
-    puts "New client connected" if @options.verbosity
+    STDOUT.puts "New client connected" if @options.verbosity
     handler = (if ssl_context
       ssl_client = OpenSSL::SSL::Socket::Server.new client, ssl_context
       ClientHandler.new(self, ssl_client)

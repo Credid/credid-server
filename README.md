@@ -16,6 +16,11 @@ You need crystal and shards installed, on the lastest version.
 
 See the [RFC](https://credid.sceptique.eu/)
 
+
+### Logs
+
+Logs are send in text format on stderr.
+
 ## Development
 
 ### Security
