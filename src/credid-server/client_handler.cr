@@ -129,7 +129,7 @@ class Credid::Server::ClientHandler
 
     STDERR.print "[#{@user ? @user.as(Acl::User).name : "*undef*"}]"
     STDERR.print " => "
-    STDERR.print command_words == "AUTH" ? "AUTH : #{params.split(" ").first}" : "#{cmd.inspect}"
+    STDERR.print({"AUTH", "USER CHANGE PASSWORD"}.includes?(command_words) ? "#{command_words} : #{params.split(" ").first}" : "#{cmd.inspect}")
     STDERR.print " => "
 
     # Verifies the permissions unless it is AUTH
