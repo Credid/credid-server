@@ -3,6 +3,7 @@ require "openssl"
 
 require "./options"
 require "./client_handler"
+require "./configure"
 
 class Credid::Server::Handler
   getter options : Credid::Server::Options
@@ -16,20 +17,9 @@ class Credid::Server::Handler
     @users = Acl::Users.new(@options.users_file).load!
     @groups = Acl::Groups.new(@options.groups_file).load!
     @handlers = Array(ClientHandler).new
-    initialize_default_configuration!
-  end
-
-  def initialize_default_configuration!
-    @users.register! name: "root", password: "toor", groups: %w(root), cost: @options.password_cost if @users.list.empty?
-    if @groups.groups.empty?
-      @groups.add "root"
-      @groups["root"]["*"] = Acl::Perm::Write
-      @groups.add "user"
-      @groups["user"]["USER CHANGE PASSWORD : ~ *"] = Acl::Perm::Write
-      @groups["user"]["USER REMOVE : ~"] = Acl::Perm::Write
-      @groups["user"]["USER LIST GROUPS : ~"] = Acl::Perm::Write
-      @groups.save!
-    end
+    Configure.root!(self) if @options.configure_root
+    Configure.default_group!(self) if @options.configure_default_group
+    exit if @options.configure_and_exit
   end
 
   def start

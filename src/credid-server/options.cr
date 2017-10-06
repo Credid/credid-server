@@ -11,6 +11,9 @@ module Credid::Server
     property groups_file : String
     property verbosity : Bool
     property password_cost : Int32
+    property configure_root : Bool
+    property configure_default_group : Bool
+    property configure_and_exit : Bool
 
     def initialize
       @port = 8999_u16
@@ -22,6 +25,9 @@ module Credid::Server
       @password_cost = 11
       @groups_file = "groups.yaml"
       @verbosity = true
+      @configure_root = false
+      @configure_default_group = false
+      @configure_and_exit = false
     end
 
     def parse!
@@ -36,6 +42,8 @@ module Credid::Server
         parser.on("-a=AFILE", "--groups=FILE", "Specify the groups database file") { |f| @groups_file = f }
         parser.on("-q", "--quiet", "Disable verbosity") { |v| @verbosity = false }
         parser.on("--password-cost=COST", "The cost to decrypt each password (default 11)") { |cost| @password_cost = UInt8.new(cost).to_i }
+        parser.on("--configure-root", "Configure the root user and exit") { @configure_root = true; @configure_and_exit = true }
+        parser.on("--configure-default-group", "Configure the default group and exit") { @configure_default_group = true; @configure_and_exit = true }
         parser.on("-h", "--help", "Show this help") { puts parser; exit }
       end
       self

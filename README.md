@@ -7,6 +7,8 @@ Credid: Authentication and permission management server.
 You need crystal and shards installed, on the lastest version.
 
     make
+    ./credid-server --configure-root
+    ./credid-server --configure-default-group
 
 ## Usage
 
