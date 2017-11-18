@@ -1,3 +1,4 @@
+require "Termioshelp"
 require "./options"
 require "./handler"
 
@@ -19,32 +20,19 @@ module Credid::Server::Configure
     root_username = stream.gets || "root"
     root_username = "root" if root_username.empty?
 
-    # Init the termios
-    told = LibC::Termios.new
-    ret = LibC.tcgetattr(stream.fd, pointerof(told))
-    raise "Failed to get attr" if ret != 0
-
-    # Save current the current state of the termios
-    tnew = told
-
-    # Disable password display
-    tnew.c_lflag &= ~LibC::ECHO
-    ret = LibC.tcsetattr(stream.fd, LibC::TCSAFLUSH, pointerof(tnew))
-    raise "Failed to set attr" if ret != 0
-
     output.print "Choose the administrator (#{root_username}) password: "
     output.flush
-    root_password = stream.gets
+    root_password = Termioshelp::Password.use(stream) do
+      stream.gets rescue nil
+    end
     raise "No password provided" if root_password.nil? || root_password.empty?
-
-    # Reset the termios
-    ret = LibC.tcsetattr(stream.fd, LibC::TCSAFLUSH, pointerof(told))
 
     handler.users.register! name: root_username, password: root_password, groups: [root_groupname], cost: handler.options.password_cost
     handler.groups.add root_groupname
     handler.groups[root_groupname]["*"] = Acl::Perm::Write
     handler.groups.save!
 
+    output.puts
     output.puts "The admin (#{root_username}) in the group (#{root_groupname}) has been added with (Write => *)"
   end
 
@@ -65,6 +53,7 @@ module Credid::Server::Configure
     handler.groups[default_groupname]["USER LIST GROUPS : ~"] = Acl::Perm::Write
     handler.groups.save!
 
+    output.puts
     output.puts "The group #{default_groupname} has now (Write => USER CHANGE PASSWORD : ~ *)"
     output.puts "The group #{default_groupname} has now (Write => USER REMOVE : ~)"
     output.puts "The group #{default_groupname} has now (Write => USER LIST GROUP : ~)"

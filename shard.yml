@@ -11,3 +11,7 @@ targets:
 crystal: 0.23.0+6
 
 license: GPL3
+
+dependencies:
+  Termioshelp:
+    github: Nephos/Termioshelp
