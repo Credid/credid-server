@@ -16,6 +16,8 @@ class Credid::Server::ClientHandler
   ROOT_HANDLERS = Hash(String, CommandHandler).new
 
   add_handler "AUTH", ClientHandler::CredidCommand.auth
+  add_handler "AUTH TOKEN", ClientHandler::CredidCommand.auth_token
+  add_handler "GEN TOKEN", ClientHandler::CredidCommand.gen_token
 
   add_handler "USER HAS ACCESS TO", ClientHandler::UserCommand.has_access_to
   add_handler "USER LIST", ClientHandler::UserCommand.list
@@ -118,7 +120,6 @@ class Credid::Server::ClientHandler
       @context.update_connection self
     end
 
-
     # Handles \a
     cmd = cmd.gsub "\\a", connected_user.name unless user.nil?
 
@@ -133,7 +134,7 @@ class Credid::Server::ClientHandler
     STDERR.print " => "
 
     # Verifies the permissions unless it is AUTH
-    if command_words != "AUTH"
+    if command_words.split(' ').first != "AUTH"
       return send_failure "not connected" if user.nil?
       return send_failure "not permitted (#{cmd})" unless context.groups.permitted? connected_user, cmd, Acl::Perm::Write, {/~/ => connected_user.name}
       # / }
